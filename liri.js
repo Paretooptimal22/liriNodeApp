@@ -8,11 +8,12 @@ const axios = require(`axios`)
 
 // get spotify npm
 const Spotify = require(`node-spotify-api`)
+const spotify = new Spotify(keys.spotify)
 
 // get fs
 const fs = require(`fs`)
 
-// create variable for commands in switch statement
+// create variable for commands in switch case
 const command = process.argv[2]
 
 // create variable for process.argv array
@@ -32,6 +33,7 @@ for (let i = 3; i < nodeArgs.length; i++) {
 
 }
 
+// create url variables to use in switch case
 let bandsUrl = `https://rest.bandsintown.com/artists/${searchTerms}/events?app_id=codingbootcamp`
 
 let movieUrl = `http://www.omdbapi.com/?t=${searchTerms}&apikey=trilogy`
@@ -53,7 +55,7 @@ switch(command) {
   case `spotify-this-song`:
     spotify
       .search({ type: `track`, query: `${searchTerms}` })
-      .then(r => {
+      .then(({ tracks: { items }}) => {
         console.log(r)
       })
       .catch(e => console.log(e))
@@ -61,8 +63,19 @@ switch(command) {
   case `movie-this`:
     axios
     .get(movieUrl)
-    .then(r => {
-      console.log(r.data)
+      .then(({ data }) => {
+      console.log(
+      `
+      Title: ${data.Title}
+      Year: ${data.Year}
+      IMDB Rating: ${data.Ratings[0].Value}
+      Rotten Tomatoes Rating: ${data.Ratings[1].Value}
+      Country: ${data.Country}
+      Language: ${data.Language}
+      Plot: ${data.Plot}
+      Actors: ${data.Actors}
+      `
+      )
     })
     .catch(e => console.log(e))
   break;
