@@ -13,6 +13,7 @@ const spotify = new Spotify(keys.spotify)
 // get fs
 const fs = require(`fs`)
 
+// get moment.js
 const moment = require(`moment`)
 
 // create variable for commands in switch case
@@ -104,6 +105,12 @@ switch(command) {
     .catch(e => console.log(e))
   break;
   case `do-what-it-says`:
+    fs.readFile(`random.txt`, `utf8`, function (e, data) {
+      if (e) {
+        console.log(e)
+      }
+      console.log(data)
+    })
   break;
   default: 
     console.log(`liri`)
