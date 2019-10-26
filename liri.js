@@ -13,6 +13,8 @@ const spotify = new Spotify(keys.spotify)
 // get fs
 const fs = require(`fs`)
 
+const moment = require(`moment`)
+
 // create variable for commands in switch case
 const command = process.argv[2]
 
@@ -33,22 +35,29 @@ for (let i = 3; i < nodeArgs.length; i++) {
 
 }
 
-// create url variables to use in switch case
+// create url variables for bands in town and omdb to use in switch case
 let bandsUrl = `https://rest.bandsintown.com/artists/${searchTerms}/events?app_id=codingbootcamp`
 
 let movieUrl = `http://www.omdbapi.com/?t=${searchTerms}&apikey=trilogy`
 
 
 // note to self: check omdb axios activity for how to handle artists w/ multiple words
+// switch case for commands concert-this, spotify-this-song, movie-this, do-what-it-says
 switch(command) {
+  // pull from bands in town api: venue name, location, and date
   case `concert-this`:
     axios
     .get(bandsUrl)
     .then(({ data }) => {
+      // stringify datetime and try to use moment to convert to MM/DD/YYYY
+      // let oldDate = JSON.stringify(data[0].datetime)
+      // let dateStyle = "MM/DD/YYYY"
+      // let newDate = moment(oldDate, dateStyle)
+      // console.log(newDate)
       console.log(
       `
       Venue Name: ${data[0].venue.name}
-      Location: ${data[0].venue.city}, ${data[0].venue.region}, ${data[0].venue.country}
+      Location: ${data[0].venue.city}, ${data[0].venue.region} ${data[0].venue.country}
       Date: ${data[0].datetime}
       `)
     }) 
@@ -58,6 +67,7 @@ switch(command) {
       }
     })
   break;
+  // pull from spotify api: artist, song, preview, album
   case `spotify-this-song`:
     spotify
     .search({ type: `track`, query: `${searchTerms}` })
@@ -73,6 +83,7 @@ switch(command) {
     })
     .catch(e => console.log(e))
   break;
+  // pull from omdb api: title, year, IMDB rating, Rotten Tomatoes rating, country, language, plot, actors
   case `movie-this`:
     axios
     .get(movieUrl)
