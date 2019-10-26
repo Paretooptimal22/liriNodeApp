@@ -43,8 +43,13 @@ switch(command) {
   case `concert-this`:
     axios
     .get(bandsUrl)
-    .then(r => {
-      console.log(r.data)
+    .then(({ data }) => {
+      console.log(
+      `
+      Venue Name: ${data[0].venue.name}
+      Location: ${data[0].venue.city}, ${data[0].venue.region}, ${data[0].venue.country}
+      Date: ${data[0].datetime}
+      `)
     }) 
     .catch(e => {
       if (e) {
