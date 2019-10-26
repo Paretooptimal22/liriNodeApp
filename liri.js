@@ -38,6 +38,7 @@ let bandsUrl = `https://rest.bandsintown.com/artists/${searchTerms}/events?app_i
 
 let movieUrl = `http://www.omdbapi.com/?t=${searchTerms}&apikey=trilogy`
 
+
 // note to self: check omdb axios activity for how to handle artists w/ multiple words
 switch(command) {
   case `concert-this`:
@@ -59,11 +60,18 @@ switch(command) {
   break;
   case `spotify-this-song`:
     spotify
-      .search({ type: `track`, query: `${searchTerms}` })
-      .then(({ tracks: { items }}) => {
-        console.log(r)
-      })
-      .catch(e => console.log(e))
+    .search({ type: `track`, query: `${searchTerms}` })
+    .then(({ tracks: { items }}) => {
+      console.log(
+       `
+      Artist(s): ${items[0].artists[0].name}
+      Song: ${items[0].name}
+      Preview: ${items[0].preview_url}
+      Album: ${items[0].album.name}
+      `
+      )
+    })
+    .catch(e => console.log(e))
   break;
   case `movie-this`:
     axios
